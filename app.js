@@ -1,20 +1,54 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+
+import { useEffect, useState } from 'react';
+import Home from './pages/Home';
+import AppLoading from 'expo-app-loading';
+import { NavigationContainer} from "@react-navigation/native"
+import { createStackNavigator } from '@react-navigation/stack';
+
+import { useFonts } from 'expo-font';
+import About from './pages/About';
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
+    'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf')
+  });
+
+  const Stack = createStackNavigator();
+ 
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>selamlar</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen 
+        name="Home"           
+        options={{
+            title: 'Home',
+            headerStyle: {
+              backgroundColor: '#313131',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center'
+
+          }} 
+          component={Home} />
+        <Stack.Screen 
+        name="About" 
+        options={{
+          title: 'About',
+          headerStyle: {
+            backgroundColor: '#313131',
+          },
+          headerTintColor: '#fff',
+          headerTitleAlign: 'center'
+        }} 
+        component={About} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
