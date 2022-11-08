@@ -9,6 +9,7 @@ import { useFonts } from 'expo-font';
 import About from './pages/About';
 
 export default function App() {
+  const [showHeader,setShowHeader]=useState();
   let [fontsLoaded] = useFonts({
     'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
     'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf')
@@ -31,8 +32,9 @@ export default function App() {
               backgroundColor: '#313131',
             },
             headerTintColor: '#fff',
-            headerTitleAlign: 'center'
-
+            headerTitleAlign: 'center',
+            headerShown:showHeader,
+       
           }} 
           component={Home} />
         <Stack.Screen 

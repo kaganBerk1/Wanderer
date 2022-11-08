@@ -1,12 +1,17 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View, FlatList,ScrollView,} from 'react-native';
+import { Button, StyleSheet, Text, View, FlatList,ScrollView, Animated} from 'react-native';
 import { globalStyles } from '../styles/global';
 import {useNavigation} from "@react-navigation/native"
 import ListItem from '../components/ListItem';
+import AddBottom from '../components/AddBottom';
 
-export default function Home() {
+export default function Home(props) {
   const navigation=useNavigation();
-
+  const screenY=new Animated.Value(0)
+  const translateY=screenY.interpolate({
+    inputRange:[0,45],
+    outputRange:[0,-45]
+  })
   let dummyObjects= [
     {
         id:0,
@@ -271,8 +276,10 @@ export default function Home() {
 
   ]
 
-  function navigateTo(){
-     navigation.navigate("About")
+  function changeNavigationOptions(){
+     navigation.setOptions({
+        
+     })
   }
 
   return (
@@ -280,6 +287,30 @@ export default function Home() {
         <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
+            /* onScroll={()=>{
+        
+                props.navigation.setOptions({
+                    headerShown:false
+                })
+            }}
+
+            onMomentumScrollEnd={()=>{
+               
+                props.navigation.setOptions({
+                    headerShown:true
+                })
+            }} */
+
+            onScroll={(e) => {
+                props.navigation.setOptions({
+                    headerShown:false
+                })
+                if(e.nativeEvent.contentOffset.y <= 200) {
+                    props.navigation.setOptions({
+                        headerShown:true
+                    })
+                }}
+            }
             
         >
   
@@ -291,8 +322,11 @@ export default function Home() {
                     )
                 }}
 
+
+
                 ></FlatList>
         </ScrollView>
+        <AddBottom></AddBottom>
     </View>
   )
 }
