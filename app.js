@@ -29,7 +29,7 @@ export default function App() {
         options={{
             title: 'Home',
             headerStyle: {
-              backgroundColor: '#313131',
+              backgroundColor: '#5e316b',
             },
             headerTintColor: '#fff',
             headerTitleAlign: 'center',

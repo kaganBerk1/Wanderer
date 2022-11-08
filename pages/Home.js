@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import { Button, StyleSheet, Text, View, FlatList,ScrollView, Animated} from 'react-native';
 import { globalStyles } from '../styles/global';
 import {useNavigation} from "@react-navigation/native"
@@ -6,12 +6,11 @@ import ListItem from '../components/ListItem';
 import AddBottom from '../components/AddBottom';
 
 export default function Home(props) {
+    const [showAddButton,setShowAddButton]=useState(true)
+
   const navigation=useNavigation();
   const screenY=new Animated.Value(0)
-  const translateY=screenY.interpolate({
-    inputRange:[0,45],
-    outputRange:[0,-45]
-  })
+
   let dummyObjects= [
     {
         id:0,
@@ -24,7 +23,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:1,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -34,7 +33,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:2,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -44,7 +43,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:3,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -54,7 +53,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:4,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -64,7 +63,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:5,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -74,7 +73,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:6,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -84,7 +83,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:7,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -94,7 +93,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:8,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -104,7 +103,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:9,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -114,7 +113,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:10,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -124,7 +123,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:11,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -134,7 +133,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:12,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -144,7 +143,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:13,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -154,7 +153,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:14,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -164,7 +163,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:15,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -174,7 +173,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:16,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -184,7 +183,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:17,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -194,7 +193,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:18,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -204,7 +203,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:19,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -214,7 +213,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:20,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -224,7 +223,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:21,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -234,7 +233,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:22,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -244,7 +243,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:23,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -254,7 +253,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:24,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -264,7 +263,7 @@ export default function Home(props) {
         imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
     },
     {
-        id:0,
+        id:25,
         title:"İstanbulda hızlı gezi turu",
         cost:800,
         distance:"200 km",
@@ -276,31 +275,36 @@ export default function Home(props) {
 
   ]
 
-  function changeNavigationOptions(){
-     navigation.setOptions({
-        
-     })
-  }
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const fadeIn = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true
+    }).start();
+  };
+
+  const fadeOut = () => {
+    // Will change fadeAnim value to 0 in 3 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 5000,
+      useNativeDriver: true
+    }).start();
+  };
+
+  useEffect(()=>{
+    fadeIn();
+  },[])
 
   return (
     <View style={globalStyles.container}>
         <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            /* onScroll={()=>{
-        
-                props.navigation.setOptions({
-                    headerShown:false
-                })
-            }}
-
-            onMomentumScrollEnd={()=>{
-               
-                props.navigation.setOptions({
-                    headerShown:true
-                })
-            }} */
-
             onScroll={(e) => {
                 props.navigation.setOptions({
                     headerShown:false
@@ -311,10 +315,24 @@ export default function Home(props) {
                     })
                 }}
             }
+
+            onScrollBeginDrag={()=>{
+                setTimeout(()=>{
+                    setShowAddButton(false)
+                    fadeOut();
+                },100)
+            }}
+            onScrollEndDrag={()=>{
+                setTimeout(()=>{
+                    setShowAddButton(true)
+                    fadeIn();
+                },1500)
+            }}
             
         >
   
                 <FlatList
+                keyExtractor={(item) => item.id}
                 data={dummyObjects}
                 renderItem={({item})=>{
                     return(
@@ -326,7 +344,15 @@ export default function Home(props) {
 
                 ></FlatList>
         </ScrollView>
-        <AddBottom></AddBottom>
+       {
+        showAddButton&&
+        <Animated.View     
+        style={{
+            opacity: fadeAnim,
+          }}>
+            <AddBottom></AddBottom>
+        </Animated.View> 
+       }
     </View>
   )
 }
