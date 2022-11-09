@@ -6,8 +6,8 @@ import { NavigationContainer} from "@react-navigation/native"
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { useFonts } from 'expo-font';
-import About from './pages/About';
 import SingleList from './pages/SingleList';
+import CreateList from './pages/CreateList';
 
 export default function App() {
   const [showHeader,setShowHeader]=useState();
@@ -52,16 +52,18 @@ export default function App() {
           }} 
           component={SingleList} />  
         <Stack.Screen 
-        name="About" 
+        name="Create" 
         options={{
-          title: 'About',
+          title: 'Create',
           headerStyle: {
-            backgroundColor: '#313131',
+            backgroundColor: '#5e316b',
           },
           headerTintColor: '#fff',
-          headerTitleAlign: 'center'
+          headerTitleAlign: 'center',
+          headerShown:true,
+     
         }} 
-        component={About} />
+        component={CreateList} />
       </Stack.Navigator>
     </NavigationContainer>
   );

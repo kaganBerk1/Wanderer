@@ -1,7 +1,10 @@
 import React from 'react'
+import { View,Text } from 'react-native'
 
 export default function CreateList() {
   return (
-    <div>CreateList</div>
+        <View>
+            <Text> asdasdasdasdasd </Text>
+        </View>
   )
 }

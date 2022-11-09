@@ -9,7 +9,7 @@ export default function AddBottom() {
   return (
     <View style={styles.cover}>
         <View style={styles.iconCover}>
-            <Ionicons  onPress={()=>navigation.navigate("About")} style={{alignSelf:"center",marginLeft:5,marginTop:-2}} name="ios-add-circle" size={70}  color="#5e316b" />
+            <Ionicons  onPress={()=>navigation.navigate("Create")} style={{alignSelf:"center",marginLeft:5,marginTop:-2}} name="ios-add-circle" size={70}  color="#5e316b" />
         </View>
     </View>
   )

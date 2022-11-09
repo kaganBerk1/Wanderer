@@ -29,7 +29,6 @@ export default function SingleList(props) {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             renderItem={({item})=>{
-                console.log(props.route.params)
                 return(
                     <ImageBackground imageStyle={{opacity:0.8,borderRadius:30,}} source={{uri:item.imageURL}} style={{flex:1,width:width,height:height*0.7,alignItems:"center"}} blurRadius={30}> 
                         {
