@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { useFonts } from 'expo-font';
 import About from './pages/About';
+import SingleList from './pages/SingleList';
 
 export default function App() {
   const [showHeader,setShowHeader]=useState();
@@ -37,6 +38,19 @@ export default function App() {
        
           }} 
           component={Home} />
+        <Stack.Screen 
+        name="SingleList"           
+        options={{
+            title: 'List',
+            headerStyle: {
+              backgroundColor: '#5e316b',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerShown:true,
+       
+          }} 
+          component={SingleList} />  
         <Stack.Screen 
         name="About" 
         options={{

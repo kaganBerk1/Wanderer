@@ -1,15 +1,12 @@
 import React, { useEffect, useState,useRef } from 'react'
-import { Button, StyleSheet, Text, View, FlatList,ScrollView, Animated} from 'react-native';
+import { View, FlatList,ScrollView, Animated} from 'react-native';
 import { globalStyles } from '../styles/global';
-import {useNavigation} from "@react-navigation/native"
 import ListItem from '../components/ListItem';
 import AddBottom from '../components/AddBottom';
 
 export default function Home(props) {
     const [showAddButton,setShowAddButton]=useState(true)
 
-  const navigation=useNavigation();
-  const screenY=new Animated.Value(0)
 
   let dummyObjects= [
     {
@@ -19,8 +16,53 @@ export default function Home(props) {
         distance:"200 km",
         placesCount:8,
         fav:30,
+        userName:"Kağan",
         desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
+        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x",
+        places:[
+            {
+                id:0,
+                name:"Dolma Bahçe",
+                desc:"Çok güzel bir yer...",
+                imageURL:"https://images.pexels.com/photos/11531658/pexels-photo-11531658.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                cost:130,
+            },
+            {
+                id:1,
+                name:"Galata",
+                desc:"Çok güzel bir yer... Galata",
+                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                cost:120,
+            },
+            {
+                id:2,
+                name:"Şehzade cağ kebabı",
+                desc:"buraya bayıldım muazzamdı. 2 kişi 300tl",
+                imageURL:"https://images.pexels.com/photos/604660/pexels-photo-604660.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                cost:300,
+            },
+            {
+                id:4,
+                name:"Olalal",
+                desc:"Çok güzel bir yer... Galata",
+                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                cost:110,
+            },
+            {
+                id:5,
+                name:"Love and Thunder",
+                desc:"Çok güzel bir yer... Galata",
+                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                cost:160,
+            },
+            {
+                id:6,
+                name:"Oh my god",
+                desc:"Çok güzel bir yer... Galata",
+                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                cost:160,
+            },
+        ]
     },
     {
         id:1,
@@ -279,7 +321,6 @@ export default function Home(props) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const fadeIn = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 500,
@@ -288,7 +329,6 @@ export default function Home(props) {
   };
 
   const fadeOut = () => {
-    // Will change fadeAnim value to 0 in 3 seconds
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 5000,
@@ -301,49 +341,39 @@ export default function Home(props) {
   },[])
 
   return (
-    <View style={globalStyles.container}>
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            onScroll={(e) => {
+    <View style={[globalStyles.container,{backgroundColor:"#ece8ed"}]}>
+        <FlatList
+        keyExtractor={(item) => item.id}
+        data={dummyObjects}
+        renderItem={({item})=>{
+            return(
+                <ListItem item={item}></ListItem>
+            )
+        }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        onScroll={(e) => {
+            props.navigation.setOptions({
+                headerShown:false
+            })
+            if(e.nativeEvent.contentOffset.y <= 170) {
                 props.navigation.setOptions({
-                    headerShown:false
+                    headerShown:true
                 })
-                if(e.nativeEvent.contentOffset.y <= 200) {
-                    props.navigation.setOptions({
-                        headerShown:true
-                    })
-                }}
-            }
-
-            onScrollBeginDrag={()=>{
-                setTimeout(()=>{
-                    setShowAddButton(false)
-                    fadeOut();
-                },100)
             }}
-            onScrollEndDrag={()=>{
-                setTimeout(()=>{
+        }
+        onMomentumScrollBegin={()=>{
+            setTimeout(()=>{
+                setShowAddButton(false)
+            },300)
+        }}
+        onMomentumScrollEnd={()=>{
+            setTimeout(()=>{
                     setShowAddButton(true)
-                    fadeIn();
-                },1500)
-            }}
-            
-        >
-  
-                <FlatList
-                keyExtractor={(item) => item.id}
-                data={dummyObjects}
-                renderItem={({item})=>{
-                    return(
-                        <ListItem item={item}></ListItem>
-                    )
-                }}
+            },300)
+        }} 
+        ></FlatList>
 
-
-
-                ></FlatList>
-        </ScrollView>
        {
         showAddButton&&
         <Animated.View     
@@ -357,6 +387,3 @@ export default function Home(props) {
   )
 }
 
-const styles=StyleSheet.create({
-    
-})

@@ -7,7 +7,7 @@ export default function ListItem({item}) {
   const navigation=useNavigation();
 
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate("About")}>
+    <TouchableOpacity onPress={()=>navigation.navigate("SingleList",item)}>
         <View style={styles.cover}>
                 <Image  style={styles.image} source={{uri:'https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x'}}></Image>
                 <Text style={styles.title}>{'\t'}{item.title}</Text>
