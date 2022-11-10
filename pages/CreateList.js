@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View,Text,Button,StyleSheet,TextInput,ScrollView, BackHandler ,Image,TouchableOpacity} from 'react-native'
 import { globalStyles } from '../styles/global'
 import { Feather } from '@expo/vector-icons';
+import {useNavigation} from "@react-navigation/native"
 
 
 export default function CreateList() {
@@ -10,7 +11,8 @@ export default function CreateList() {
     const [title,setTitle]=useState("")
     const [cost,setCost]=useState(0)
     const [comment,setComment]=useState("")
-    
+    const navigation=useNavigation();
+      
 
     function handleSelecetedItem(index){
         if(index===selecetedIndex){
@@ -69,7 +71,10 @@ export default function CreateList() {
                 }
 
                 <View style={[styles.placeCover,{flexDirection:"row",width:"100%" ,flexWrap:"wrap",marginTop:20,}]}> 
-                            <Feather style={styles.image}  name="image" size={24} color="black" />
+                            <View style={styles.upload}>
+                                <Feather style={styles.image}  name="image" size={80} color="black" />
+                                <Text>Click to upload image</Text>
+                            </View>
                             <TextInput value={title} onChangeText={(value)=>setTitle(value)} style={styles.title} maxLength={20} multiline placeholder='Enter Title'></TextInput>
                             <TextInput value={comment}  onChangeText={(value)=>setComment(value)} style={styles.comment} maxLength={60} multiline placeholder='Comment For Here'></TextInput>
                             <TextInput value={cost}  onChangeText={(value)=>setCost(value)}  style={styles.title} maxLength={6}   keyboardType='numeric' placeholder="Cost You've Spend"></TextInput>
@@ -78,9 +83,9 @@ export default function CreateList() {
                             </View>
                 </View> 
                 {
-                    places.length>3&&
+                    places.length>=0&&
                     <View style={styles.buttonCover}>
-                        <Button onPress={()=>handleNewPlace()}  title="Next" ></Button>
+                        <Button onPress={()=>navigation.navigate("CreateCont",places)}  title="Next" ></Button>
                     </View>
                 }
             </View>
@@ -96,8 +101,6 @@ const styles= StyleSheet.create({
         overflow:"hidden",
     },
     image:{
-        width:"100%",
-        height:200,
         alignItems:"center",
         objectFit:"cover",
         resizeMode:"cover",
@@ -180,5 +183,15 @@ const styles= StyleSheet.create({
         borderBottomRightRadius:10,
         overflow:"hidden",
 
+    },
+    upload:{
+        width:"100%",
+        height:200,
+        justifyContent:"center",
+        alignItems:"center",
+        fontFamily:"nunito-regular",
+        borderBottomWidth:0.5,
+        borderStyle:"dashed",
+        borderColor:"#313131",
     }
 })
