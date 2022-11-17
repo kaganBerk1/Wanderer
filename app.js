@@ -9,6 +9,7 @@ import { useFonts } from 'expo-font';
 import SingleList from './pages/SingleList';
 import CreateList from './pages/CreateList';
 import CreateCont from './pages/CreateCont';
+import Login from './pages/Login';
 
 export default function App() {
   const [showHeader,setShowHeader]=useState();
@@ -26,6 +27,17 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen 
+     name="Login"           
+     options={{
+         title: 'Login',
+         headerStyle: {
+           backgroundColor: '#5e316b',
+         },
+         headerTintColor: '#fff',
+         headerTitleAlign: 'center',       
+       }} 
+       component={Login} />
         <Stack.Screen 
         name="Home"           
         options={{
