@@ -9,9 +9,28 @@ import { AntDesign } from '@expo/vector-icons';
 
 export default function Login() {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState(0);
+    const [newUserName, setNewUserName] = useState("");
+    const [newPassword, setNewPassword] = useState(0);
+    const [newPasswordConfirm, setPasswordConfirm] = useState(0);
+
+    
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+  function handleLogin(){
+    //TODO: Login and log out function should created When backend ready
+    alert("log in or out")
+  }
+
+  function handleNewUser(){
+    //TODO: create new user When backend ready
+    //TODO: Check Username is unique in database
+
+    alert("new user")
+  }
 
   return (
         <View style={[globalStyles.container,{marginTop:30}]}>
@@ -24,10 +43,10 @@ export default function Login() {
             </View>
             <LoginScreen
             logoImageSource={require("../assets/logo.png")}
-            onLoginPress={() => {}}
+            onLoginPress={() => {handleLogin()}}
             onSignupPress={toggleModal}
-            onEmailChange={() => {}}
-            onPasswordChange={() => {}}
+            onEmailChange={(value) => {setUserName(value)}}
+            onPasswordChange={(value) => {setPassword(value)}}
             disableSocialButtons
             emailPlaceholder="Username"
             style={{
@@ -40,15 +59,15 @@ export default function Login() {
                 <View style={{ height: Dimensions.get('window').height*0.4,backgroundColor:"white",borderRadius:30, }}>
                 <AntDesign onPress={()=>setModalVisible(false)} name="closecircleo" style={styles.close} size={36} color="black" />
                     <View style={styles.textCover}>
-                        <TextInput    style={styles.comment}  multiline placeholder='Username'></TextInput>
-                        <TextInput    style={styles.title}  secureTextEntry={true}  keyboardType='numeric' placeholder="Password"></TextInput>
-                        <TextInput    style={styles.title}  secureTextEntry={true}  keyboardType='numeric' placeholder="Password Again"></TextInput>
+                        <TextInput  onChangeText={(value)=>setNewUserName(value)}  style={styles.comment}  multiline placeholder='Username'></TextInput>
+                        <TextInput   onChangeText={(value)=>setNewPassword(value)}   style={styles.title}  secureTextEntry={true}  keyboardType='numeric' placeholder="Password"></TextInput>
+                        <TextInput  onChangeText={(value)=>setPasswordConfirm(value)}  style={styles.title}  secureTextEntry={true}  keyboardType='numeric' placeholder="Password Again"></TextInput>
 
                     </View>
 
                     <LoginScreen
                         logoImageSource={require("../assets/logo.png")}
-                        onLoginPress={() => {}}
+                        onLoginPress={() => {handleNewUser()}}
                         disableSignup
                         loginButtonText="Create"
                         disableSocialButtons
