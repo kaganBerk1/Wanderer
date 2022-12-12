@@ -3,9 +3,9 @@ import { View,Text,StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import {useNavigation} from "@react-navigation/native"
 
-export default function AddBottom() {
+export default function AddBottom(props) {
   const navigation=useNavigation();
-
+    
   return (
     <View style={styles.cover}>
         <View style={styles.iconCover}>

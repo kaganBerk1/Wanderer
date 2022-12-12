@@ -7,6 +7,8 @@ import { AntDesign } from '@expo/vector-icons';
 
 export default function SingleList(props) {
     const places=props.route.params.places
+    //console.log(places)
+    //console.log(props)
     const scrollX=useRef(new Animated.Value(0)).current
     const {width,height}=Dimensions.get("screen")
     const imageWidth=width*0.9
@@ -20,7 +22,7 @@ export default function SingleList(props) {
             <Animated.FlatList
             horizontal
             data={places}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id}
             onscroll={Animated.event(
                 [{nativeEvent:{contentOffset:{x:scrollX}}}],
                 {useNativeDriver:true}
@@ -28,18 +30,18 @@ export default function SingleList(props) {
             pagingEnabled
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            renderItem={({item})=>{
+            renderItem={({item,index})=>{
                 return(
                     <ImageBackground imageStyle={{opacity:0.8,borderRadius:30,}} source={{uri:item.imageURL}} style={{flex:1,width:width,height:height*0.7,alignItems:"center"}} blurRadius={30}> 
                         {
-                            item.id!==props.route.params.places.length && <AntDesign style={styles.rightArrow} name="caretright" size={24} color="black" />
+                            index!==props.route.params.places.length-1 && <AntDesign style={styles.rightArrow} name="caretright" size={24} color="black" />
                         }
                         {
-                            item.id!==0 && <AntDesign style={styles.leftArrow} name="caretleft" size={24} color="black" />   
+                            index!==0 && <AntDesign style={styles.leftArrow} name="caretleft" size={24} color="black" />   
                         }
-                        <Text style={styles.innetText}><Text style={styles.headerTitle}>#{item.id+1}</Text> {item.name}</Text>
+                        <Text style={styles.innetText}><Text style={styles.headerTitle}>#{index+1}</Text> {item.placeName}</Text>
                         <Image  style={{width:imageWidth,height:imageHeight-80,resizeMode:"cover",borderRadius:20,borderWidth:2,borderColor:"#5e316b"}} source={{uri:item.imageURL}} b></Image>
-                        <Text style={styles.desc}> {item.desc}</Text>
+                        <Text style={styles.comment}> {item.comment}</Text>
                         <Text style={styles.cost}>💰 {item.cost}₺</Text>
                     </ImageBackground>
                 )
@@ -47,15 +49,15 @@ export default function SingleList(props) {
             >
             </Animated.FlatList>
 
-            <Text style={styles.title}>{props.route.params.title} Yeni Dünya Düzeni</Text>
-            <Text style={styles.userNameSay}>{props.route.params.userName} says: </Text>
+            <Text style={styles.title}>{props.route.params.title} </Text>
+  {/*           <Text style={styles.userNameSay}>{props.route.params.userName} says: </Text> */}
 
-            <Text style={styles.secondDesc} >   {props.route.params.desc} asdasd asdasd asdasd asdasd asd asdas dasd asdasdas asdas </Text>
+            <Text style={styles.secondDesc} > </Text>
             <View  style={styles.bottomCover}>
-                    <Text style={[styles.textBottom,{width:"50%"}]} >🏛️ Places: <Text style={{fontFamily:"nunito-bold"}}>{props.route.params.placesCount} </Text></Text>
+                    <Text style={[styles.textBottom,{width:"50%"}]} >🏛️ Places: <Text style={{fontFamily:"nunito-bold"}}>{props.route.params.destinationNumber} </Text></Text>
                     <Text style={styles.textBottom}>💰 Cost: <Text style={{fontFamily:"nunito-bold"}}>{props.route.params.cost}₺</Text></Text>
                     <Text style={[styles.textBottom,{width:"50%"}]} >🛣️ Distance: <Text style={{fontFamily:"nunito-bold"}}>{props.route.params.distance}</Text></Text>
-                    <Text style={styles.textBottom}>😻 Fav: <Text style={{fontFamily:"nunito-bold"}}>{props.route.params.fav}</Text></Text>
+                    <Text style={styles.textBottom}>😻 Fav: <Text style={{fontFamily:"nunito-bold"}}>30</Text></Text>
             </View>
             <Text style={[styles.textBottom,{textAlign:"right",marginRight:10,}]}>Created By {props.route.params.userName}</Text>
 {/*             <View style={{position:"absolute",bottom:0,alignSelf:"center"}}>
@@ -115,7 +117,7 @@ const styles=StyleSheet.create({
         textAlign:"justify",
         borderBottomWidth:1,
         borderBottomColor:"#313131",
-        paddingBottom:20,
+        
     },
     bottomCover:{
         flex:1,

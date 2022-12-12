@@ -5,19 +5,19 @@ import {useNavigation} from "@react-navigation/native"
 
 export default function ListItem({item}) {
   const navigation=useNavigation();
-
+    //console.log(item)
   return (
     <TouchableOpacity onPress={()=>navigation.navigate("SingleList",item)}>
         <View style={styles.cover}>
-                <Image  style={styles.image} source={{uri:'https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x'}}></Image>
+                <Image  style={styles.image} source={{uri:item.places[0]?.imageURL}}></Image>
                 <Text style={styles.title}>{'\t'}{item.title}</Text>
 {/*                 <Text style={styles.desc}>{item.desc}</Text> */}
 
                 <View  style={styles.bottomCover}>
-                    <Text style={[styles.textBottom,{width:"50%"}]} >🏛️ Places: <Text style={{fontFamily:"nunito-bold"}}>{item.placesCount} </Text></Text>
+                    <Text style={[styles.textBottom,{width:"50%"}]} >🏛️ Places:{item.destinationNumber} <Text style={{fontFamily:"nunito-bold"}}>{item.placesCount} </Text></Text>
                     <Text style={styles.textBottom}>💰 Cost: <Text style={{fontFamily:"nunito-bold"}}>{item.cost}₺</Text></Text>
                     <Text style={[styles.textBottom,{width:"50%"}]} >🛣️ Distance: <Text style={{fontFamily:"nunito-bold"}}>{item.distance}</Text></Text>
-                    <Text style={styles.textBottom}>😻 Fav: <Text style={{fontFamily:"nunito-bold"}}>{item.fav}</Text></Text>
+                    <Text style={styles.textBottom}>😻 Fav: <Text style={{fontFamily:"nunito-bold"}}>30</Text></Text>
                 </View>
         </View>
     </TouchableOpacity>

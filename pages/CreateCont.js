@@ -1,15 +1,63 @@
-import React from 'react'
+import React , {useEffect, useState} from 'react'
 import { View,TextInput, StyleSheet,Button} from 'react-native'
-import { globalStyles } from '../styles/global'
+import axios from "axios";
 
-export default function () {
+import { globalStyles } from '../styles/global'
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
+
+export default function ({ route, navigation }) {
+  const [title, setTitle] = useState("");
+  const [totalPlaceNumber, setTotalPlaceNumber] = useState("");
+  const [cost,setCost]= useState("")
+  const [distance, setDistance] = useState("");
+  const [userName,setUserName]=useState("")
+
+  async function getUserName(){
+    //console.log(route.params.palces)
+    try {
+        let userName = await AsyncStorage.getItem("userName")
+        setUserName(userName)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+useEffect(()=>{
+  getUserName()
+},[])
+ 
+  function createList(){
+    axios({
+      method: 'post',
+      url: 'http://119.8.162.103:8000/list/create',
+      data: {
+        title: title,
+        cost: cost,
+        destinationNumber:totalPlaceNumber,
+        distance:distance,
+        places:route.params.places,
+        userName:userName
+      }
+      }).then(res => {
+/*           setLoading(false) */
+          navigation.navigate("Home")
+      }).catch((err)=>{
+          console.log(err)
+/*           setLoading(false) */
+
+  })
+  }
+
+
   return (
     <View style={globalStyles.container}>
-          <TextInput   style={styles.title} maxLength={20} keyboardType='numeric' multiline placeholder='Total Places'></TextInput>
-          <TextInput    style={styles.comment} keyboardType='numeric' maxLength={6} multiline placeholder='Total Cost'></TextInput>
-          <TextInput    style={styles.title} maxLength={6}   keyboardType='numeric' placeholder="Average Distance"></TextInput>
+          <TextInput   style={styles.title} onChangeText={(value)=>setTitle(value)}  placeholder='Title'></TextInput>
+          <TextInput   style={styles.title} onChangeText={(value)=>setTotalPlaceNumber(value)} maxLength={20} keyboardType='numeric' multiline placeholder='Total Places'></TextInput>
+          <TextInput  onChangeText={(value)=>setCost(value)}  style={styles.comment} keyboardType='number-pad' maxLength={6}  placeholder='Total Cost'></TextInput>
+          <TextInput  onChangeText={(value)=>setDistance(value)}  style={styles.title} maxLength={6}   keyboardType='numeric' placeholder="Average Distance"></TextInput>
         <View style={styles.buttonCover}>
-                <Button onPress={()=>navigation.navigate("CreateCont",places)}  title="Share List 🤞🏻" ></Button>
+                <Button onPress={()=>createList()}  title="Share List 🤞🏻" ></Button>
             </View>
     </View>
   )

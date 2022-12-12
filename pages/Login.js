@@ -7,6 +7,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import {useNavigation,useIsFocused} from "@react-navigation/native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const ScreenWidth= Dimensions.get("screen").width;
 
@@ -37,14 +38,15 @@ export default function Login() {
     setLoading(true);
     axios({
         method: 'post',
-        url: 'https://25d4-31-223-87-41.eu.ngrok.io/auth/login',
+        url: 'http://119.8.162.103:8000/auth/login',
         data: {
           name: userName,
           password: password
         }
     }).then(res => {
-        setLoading(false)
+        saveUserName(userName)
         navigation.navigate("Home")
+        setLoading(false)
 
     }).catch((err)=>{
         //console.log(err)
@@ -55,6 +57,13 @@ export default function Login() {
 
 }
 
+async function saveUserName(Username){
+    try {
+      await AsyncStorage.setItem("userName",Username)
+    } catch (error) {
+      console.log(error)
+    }
+}
   
 
   function handleNewUser(){
@@ -62,17 +71,19 @@ export default function Login() {
     if(newPassword===newPasswordConfirm){
         axios({
             method: 'post',
-            url: 'https://25d4-31-223-87-41.eu.ngrok.io/auth/register',
+            url: 'http://119.8.162.103:8000/auth/register',
             data: {
               name: newUserName,
               password: newPassword
             }
         }).then(res => {
             setLoading(false)
+            //console.log(newUserName)
+            saveUserName(newUserName)
             navigation.navigate("Home")
         }).catch((err)=>{
             console.log(err)
-            alert("Uour User Name is not unique")
+            //alert("Uour User Name is not unique")
             setLoading(false)
 
         })
@@ -121,8 +132,8 @@ const Logo = () => (
                         color: "#acabb0",
                     }
                 }>
-                  <TextInput value={userName} onChangeText={(value)=>setUserName(value)}  style={[styles.comment,{marginBottom:20}]}  multiline placeholder='Username'></TextInput>
-                  <TextInput  value={password}   onChangeText={(value)=>setPassword(value)}   style={styles.title}  secureTextEntry={true}   placeholder="Password"></TextInput>
+                  <TextInput value={userName} onChangeText={(value)=>setUserName(value)}  style={[styles.comment,{marginBottom:20}]}  multiline={false} placeholder='Username'></TextInput>
+                  <TextInput  value={password}   onChangeText={(value)=>setPassword(value)}   style={styles.title}  secureTextEntry={true} multiline={false}   placeholder="Password"></TextInput>
                 </View>
                 {
                   loading?

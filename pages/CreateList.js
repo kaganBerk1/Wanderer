@@ -1,19 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View,Text,Button,StyleSheet,TextInput,ScrollView, BackHandler ,Image,TouchableOpacity} from 'react-native'
 import { globalStyles } from '../styles/global'
 import { Feather } from '@expo/vector-icons';
 import {useNavigation} from "@react-navigation/native"
+import * as ImagePicker from 'expo-image-picker';  // not react-image-picker 
+import axios from 'axios';
+import uuid from 'react-native-uuid';
 
-
-export default function CreateList() {
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+export default function CreateList({route}) {
     const [places,setPlaces]=useState([])
     const [selecetedIndex,setSelecetedIndex]=useState(null)
-    const [title,setTitle]=useState("")
+    const [placeName,setPlaceName]=useState("")
+    const [hasGalleryPermissions,setHasGalleryPermissions]=useState("")
+    const [image, setImage] = useState(null);
+    const [imageURL,setImageURL] = useState("")
+
     const [cost,setCost]=useState(0)
     const [comment,setComment]=useState("")
     const navigation=useNavigation();
-      
 
+    async function getPermission(){
+        const galleryStatus =await ImagePicker.requestMediaLibraryPermissionsAsync()
+        setHasGalleryPermissions(galleryStatus.status=="granted")
+    } 
+
+    useEffect(()=>{
+        getPermission()
+    
+    
+    },[])
+ 
+  
     function handleSelecetedItem(index){
         if(index===selecetedIndex){
             setSelecetedIndex(null)
@@ -28,41 +46,105 @@ export default function CreateList() {
         setSelecetedIndex(null)
     }
 
+   async  function sendImageToServer(result){
+        let endpoint="https://wanderer.obs.ap-southeast-3.myhuaweicloud.com/"
+        let imageKEY=uuid.v4()+"-"+result.fileName
+        setImageURL(endpoint+imageKEY)
+        const formData = new FormData()
+        formData.append("file",{
+            uri:result.uri,
+            type:result.type,
+            name:result.fileName,
+            
+        })
+        formData.append("imageKEY",imageKEY)
+        //console.log(formData)
+
+/*         axios.post('https://25d4-31-223-87-41.eu.ngrok.io/list/uploadImage', {
+            body:formData,
+            headers: {'Content-Type': 'multipart/form-data' }
+        }) */
+        fetch('http://119.8.162.103:8000/list/uploadImage', {
+            method: 'POST',
+            body: formData
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log('Success:');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
+    }
+
     function handleNewPlace(){
+        //console.log(image)
         let newObj={
-            title,
+            placeName,
             comment,
-            cost
+            cost,
+            imageURL,
+            image
         }
+        //console.log(newObj)
         setPlaces(prevArray => [...prevArray, newObj])
         setComment("")
-        setTitle("")
+        setPlaceName("")
         setCost(null)
+        setImage(null)
     }
+
+
+    async function handleImage(){
+        if(!hasGalleryPermissions){
+            alert("Please Give Permmisions ")
+        }else if(image==!""){
+            setImage(0)
+        }else{
+            try {
+                let result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    quality: 1,
+                  });
+              
+                  if (!result.cancelled) {
+                    console.log(result)
+                   
+                    sendImageToServer(result)
+                    setImage(result.uri);
+                  }
+                 // console.log(result) 
+           } catch (error) {
+            console.log(error)
+           }
+        }
+    }
+
   return (
         <ScrollView>
             <View style={[globalStyles.container,{alignItems:"center",width:"100%",paddingTop:20,}]}>
                 {
                     places.map((val,index)=>{
                         return(
-                            <View  style={{width:"100%",paddingTop:5}}>
+                            <View  style={{width:"100%",paddingTop:5}} key={index}>
                             {
                             selecetedIndex == index ?
-                            <TouchableOpacity onPress={()=>handleSelecetedItem(index)} style={[styles.placeCover,{flexDirection:"row",width:"100%" ,flexWrap:"wrap"}]}> 
+                            <TouchableOpacity onPress={()=>handleSelecetedItem(index)} style={[styles.placeCover,{flexDirection:"row",width:"100%" ,flexWrap:"wrap",height:254}]}> 
                                 <Text style={styles.ancher}>#{index+1}</Text>
-                                <Image  style={styles.image} source={{uri:'https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x'}}></Image>
-                                <Text  style={styles.title} > {val.title}</Text>
+                                <Image  style={selecetedIndex==index?{ width:"100%",height:100,resizeMode:"cover",borderRadius:10}:styles.image} source={{uri:val.image}}/>
+                                <Text  style={styles.title} > {val.placeName}</Text>
                                 <Text style={styles.comment}>{val.comment}</Text>
                                 <Text  style={styles.title} >{val.cost}₺</Text>
                                 <View style={styles.button} >
-                                    <Button onPress={()=>deletePlace(index)} title="Delete 👷🏻" color="#a83432"></Button>
+                                    <Button onPress={()=>deletePlace(index)}  title="Delete 👷🏻" color="#a83432"></Button>
                                 </View>
 
                             </TouchableOpacity> 
                             :
                             <TouchableOpacity  style={styles.dropdown} onPress={()=>handleSelecetedItem(index)}> 
                                 <Text style={styles.secondAncher}>#{index+1}</Text> 
-                                <Text style={styles.shortDesc}>{val.title}</Text>
+                                <Text style={styles.shortDesc}>{val.placeName}</Text>
                             </TouchableOpacity > 
                             }
                             </View>
@@ -70,13 +152,19 @@ export default function CreateList() {
                     })
                 }
 
-                <View style={[styles.placeCover,{flexDirection:"row",width:"100%" ,flexWrap:"wrap",marginTop:20,}]}> 
-                            <View style={styles.upload}>
-                                <Feather style={styles.image}  name="image" size={80} color="black" />
-                                <Text>Click to upload image</Text>
-                            </View>
-                            <TextInput value={title} onChangeText={(value)=>setTitle(value)} style={styles.title} maxLength={20} multiline placeholder='Enter Title'></TextInput>
-                            <TextInput value={comment}  onChangeText={(value)=>setComment(value)} style={styles.comment} maxLength={60} multiline placeholder='Comment For Here'></TextInput>
+                <View style={[styles.placeCover,{flexDirection:"row",width:"100%" ,flexWrap:"wrap",marginTop:30,}]}> 
+                             {image ?
+                                <TouchableOpacity onPress={()=>handleImage()} style={{width:"100%",height:250,padding:5}} >
+                                    <Image source={{ uri: image }} style={{ width:"100%",height:"100%",resizeMode:"cover",borderRadius:10}}/>
+                                </TouchableOpacity>
+                             :
+                                <TouchableOpacity style={styles.upload} onPress={()=>{handleImage()}}>
+                                    <Feather style={styles.image}  name="image" size={80} color="black" />
+                                    <Text>Click to upload image</Text>
+                                </TouchableOpacity>
+                             }    
+                            <TextInput value={placeName} multiline={false} onChangeText={(value)=>setPlaceName(value)} style={styles.title} maxLength={20}  placeholder='Enter Place Name'></TextInput>
+                            <TextInput value={comment}  onChangeText={(value)=>setComment(value)} style={styles.comment} maxLength={60} multiline={false}  placeholder='Comment For Here'></TextInput>
                             <TextInput value={cost}  onChangeText={(value)=>setCost(value)}  style={styles.title} maxLength={6}   keyboardType='numeric' placeholder="Cost You've Spend"></TextInput>
                             <View style={styles.button} >
                                 <Button onPress={()=>handleNewPlace()}  title="Add Place +" color="#5e316b"></Button>
@@ -85,7 +173,7 @@ export default function CreateList() {
                 {
                     places.length>=0&&
                     <View style={styles.buttonCover}>
-                        <Button onPress={()=>navigation.navigate("CreateCont",places)}  title="Next" ></Button>
+                        <Button onPress={()=>navigation.navigate("CreateCont",{places})}  title="Next" ></Button>
                     </View>
                 }
             </View>
@@ -182,6 +270,7 @@ const styles= StyleSheet.create({
         borderBottomLeftRadius:10,
         borderBottomRightRadius:10,
         overflow:"hidden",
+    
 
     },
     upload:{

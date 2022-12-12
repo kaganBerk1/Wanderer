@@ -3,319 +3,33 @@ import { View, FlatList,ScrollView, Animated} from 'react-native';
 import { globalStyles } from '../styles/global';
 import ListItem from '../components/ListItem';
 import AddBottom from '../components/AddBottom';
+import axios from "axios";
+import {useNavigation} from "@react-navigation/native"
+
 
 export default function Home(props) {
     const [showAddButton,setShowAddButton]=useState(true)
+    const [lists,setLists]=useState([])
+    const [isFetching, setIsFetching] = useState(false);
 
+  function getAllList(){
+    axios({
+        method: 'get',
+        url: 'http://119.8.162.103:8000/list/',
+    }).then(res => {
+        //console.log(res)
+        setLists(res.data)
+    }).catch((err)=>{
+        //console.log(err)
+      setLoading(false)
+    })
+    setIsFetching(false)
+  }
 
-  let dummyObjects= [
-    {
-        id:0,
-        title:"İstanbulda hızlı gezi turu Lütfen tıklayın",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        userName:"Kağan",
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x",
-        places:[
-            {
-                id:0,
-                name:"Dolma Bahçe",
-                desc:"Çok güzel bir yer...",
-                imageURL:"https://images.pexels.com/photos/11531658/pexels-photo-11531658.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                cost:130,
-            },
-            {
-                id:1,
-                name:"Galata",
-                desc:"Çok güzel bir yer... Galata",
-                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                cost:120,
-            },
-            {
-                id:2,
-                name:"Şehzade cağ kebabı",
-                desc:"buraya bayıldım muazzamdı. 2 kişi 300tl",
-                imageURL:"https://images.pexels.com/photos/604660/pexels-photo-604660.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                cost:300,
-            },
-            {
-                id:4,
-                name:"Olalal",
-                desc:"Çok güzel bir yer... Galata",
-                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                cost:110,
-            },
-            {
-                id:5,
-                name:"Love and Thunder",
-                desc:"Çok güzel bir yer... Galata",
-                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                cost:160,
-            },
-            {
-                id:6,
-                name:"Oh my god",
-                desc:"Çok güzel bir yer... Galata",
-                imageURL:"https://images.pexels.com/photos/14083884/pexels-photo-14083884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                cost:160,
-            },
-        ]
-    },
-    {
-        id:1,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:2,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:3,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:4,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:5,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:6,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:7,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:8,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:9,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:10,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:11,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:12,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:13,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:14,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:15,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:16,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:17,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:18,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:19,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:20,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:21,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:22,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:23,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:24,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-    {
-        id:25,
-        title:"İstanbulda hızlı gezi turu",
-        cost:800,
-        distance:"200 km",
-        placesCount:8,
-        fav:30,
-        desc:"Hızlı ve güvenli istanbul gezisi",
-        imageURL:"https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 1x, https://images.pexels.com/photos/14260474/pexels-photo-14260474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2 2x"
-    },
-
-  ]
+  useEffect(()=>{
+    getAllList()
+    //console.log(lists)
+  },[])
 
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -328,13 +42,13 @@ export default function Home(props) {
     }).start();
   };
 
-  const fadeOut = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 5000,
-      useNativeDriver: true
-    }).start();
-  };
+  const onRefresh = () => {
+    //set isRefreshing to true
+    setIsFetching(true)
+    getAllList()
+    
+    // and set isRefreshing to false at the end of your callApiMethod()
+}
 
   useEffect(()=>{
     fadeIn();
@@ -343,11 +57,13 @@ export default function Home(props) {
   return (
     <View style={[globalStyles.container,{backgroundColor:"#ece8ed"}]}>
         <FlatList
-        keyExtractor={(item) => item.id}
-        data={dummyObjects}
+        keyExtractor={(item) => item._id}
+        data={lists}
+        onRefresh={onRefresh}
+        refreshing={isFetching}
         renderItem={({item})=>{
             return(
-                <ListItem item={item}></ListItem>
+                <ListItem  item={item}></ListItem>
             )
         }}
         showsVerticalScrollIndicator={false}
@@ -380,7 +96,7 @@ export default function Home(props) {
         style={{
             opacity: fadeAnim,
           }}>
-            <AddBottom></AddBottom>
+            <AddBottom ></AddBottom>
         </Animated.View> 
        }
     </View>
